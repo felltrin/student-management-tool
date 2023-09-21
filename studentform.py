@@ -33,12 +33,57 @@ class MyApp(tk.Tk):
 
         self.title("Management")
         self.form_frame = FormFrame(self)
-        # self.frame2 = Frame2(self)
+        self.display_frame = DisplayFrame(self)
         self.show_frame(self.form_frame)
 
     def show_frame(self, frame):
         frame.grid(row=0, column=0, sticky="nsew")
         frame.tkraise()
+
+
+class DisplayFrame(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+
+        self.app_label = tk.Label(
+            self, text="Student Management System", fg="#06a099", width=40
+        )
+        self.app_label.config(font=("Sylfaen", 30))
+        self.app_label.pack()
+
+        self.tree = ttk.Treeview(self)
+        self.tree["columns"] = ("one", "two", "three", "four")
+
+        self.tree.column("one", width=75)
+        self.tree.column("two", width=75)
+        self.tree.heading("one", text="Student Name")
+        self.tree.heading("two", text="College Name")
+        self.tree.heading("three", text="Address")
+        self.tree.heading("four", text="Email")
+
+        self.load_data()
+
+        self.tree.pack()
+
+    def load_data(self):
+        # Fetch the data from database and puts it into TreeView
+        TABLE_NAME = "management_table"
+        connection = sqlite3.connect("database.db")
+        cursor = connection.execute(
+            "SELECT * FROM " + TABLE_NAME + ";"
+        )
+        i = 0
+
+        for row in cursor:
+            self.tree.insert(
+                "",
+                i,
+                text="Student " + str(row[0]),
+                values=(row[1], row[2], row[3], row[4]),
+            )
+            i = i + 1
+        
+        connection.close()
 
 
 class FormFrame(tk.Frame):
@@ -98,6 +143,9 @@ class FormFrame(tk.Frame):
             self, text="Take Input", command=lambda: self.takeStudentInput()
         )
         self.input_button.grid(row=5, column=0, padx=(10, 0), pady=(30, 20))
+
+        self.display_button = tk.Button(self, text="Display Results", command=lambda: master.show_frame(master.display_frame))
+        self.display_button.grid(row=5, column=1, padx=(10, 0), pady=(30, 20))
 
 
     def takeStudentInput(self):
