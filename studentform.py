@@ -65,6 +65,14 @@ class DisplayFrame(tk.Frame):
 
         self.tree.pack()
 
+        delete_button = tk.Button(
+            self,
+            text="Remove Student",
+            width=25,
+            command=lambda: self.removeSelection(),
+        )
+        delete_button.pack()
+
     def load_data(self):
         # Fetch the data from database and puts it into TreeView
         TABLE_NAME = "management_table"
@@ -84,6 +92,48 @@ class DisplayFrame(tk.Frame):
             i = i + 1
         
         connection.close()
+    
+    def removeSelection(self):
+        # Removes the selected student from the database and the display
+        TABLE_NAME = "management_table"
+        STUDENT_NAME = "student_name"
+        STUDENT_COLLEGE = "student_college"
+        STUDENT_ADDRESS = "student_address"
+        STUDENT_EMAIL = "student_email"
+        
+        connection = sqlite3.connect("database.db")
+        student_removed = self.tree.selection()[0]
+        list_of_values = self.tree.item(student_removed)["values"]
+
+        student_name = list_of_values[0]
+        student_college = list_of_values[1]
+        student_address = list_of_values[2]
+        student_email = list_of_values[3]
+
+        connection.execute(
+            "DELETE FROM "
+            + TABLE_NAME
+            + " WHERE "
+            + STUDENT_NAME
+            + " = '"
+            + student_name
+            + "' AND "
+            + STUDENT_COLLEGE
+            + " = '"
+            + student_college
+            + "' AND "
+            + STUDENT_ADDRESS
+            + " = '"
+            + student_address
+            + "' AND "
+            + STUDENT_EMAIL
+            + " = '"
+            + student_email
+            + "';"
+        )
+        connection.commit()
+        messagebox.showinfo("Success", "Data Deleted Successfully.")
+        self.tree.delete(student_removed)
 
 
 class FormFrame(tk.Frame):
