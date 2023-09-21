@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Frame, ttk, messagebox
+from tkinter import ttk, messagebox
 import sqlite3
 
 
@@ -39,6 +39,13 @@ class MyApp(tk.Tk):
     def show_frame(self, frame):
         frame.grid(row=0, column=0, sticky="nsew")
         frame.tkraise()
+        self.update_title(frame)  # Call the method to update the title
+
+    def update_title(self, frame):
+        if frame == self.form_frame:
+            self.title("Management")
+        elif frame == self.display_frame:
+            self.title("Display Results")
 
 
 class DisplayFrame(tk.Frame):
@@ -236,6 +243,8 @@ class FormFrame(tk.Frame):
             + "' );"
         )
         connection.commit()
+        # Clear the Treeview and then reload the data
+        self.master.display_frame.tree.delete(*self.master.display_frame.tree.get_children())
         # Load the data into the tree view after taking input
         self.master.display_frame.load_data()
         messagebox.showinfo("Success", "Data Saved Successfully.")
