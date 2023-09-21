@@ -4,7 +4,7 @@ import sqlite3
 
 
 class MyApp(tk.Tk):
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
 
         TABLE_NAME = "management_table"
@@ -68,10 +68,13 @@ class DisplayFrame(tk.Frame):
         delete_button = tk.Button(
             self,
             text="Remove Student",
-            width=25,
+            width=20,
             command=lambda: self.removeSelection(),
         )
         delete_button.pack()
+
+        self.back_button = tk.Button(self, text="Back", command=lambda: master.show_frame(master.form_frame), width=20)
+        self.back_button.pack()
 
     def load_data(self):
         # Fetch the data from database and puts it into TreeView
@@ -139,6 +142,8 @@ class DisplayFrame(tk.Frame):
 class FormFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
+
+        self.master = master
 
         self.TABLE_NAME = "management_table"
         self.STUDENT_ID = "student_id"
@@ -231,4 +236,6 @@ class FormFrame(tk.Frame):
             + "' );"
         )
         connection.commit()
+        # Load the data into the tree view after taking input
+        self.master.display_frame.load_data()
         messagebox.showinfo("Success", "Data Saved Successfully.")
