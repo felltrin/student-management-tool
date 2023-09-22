@@ -63,7 +63,7 @@ class DisplayFrame(tk.Frame):
 
         self.tree.column("one", width=75)
         self.tree.column("two", width=75)
-        self.tree.heading("one", text="Student Name")
+        self.tree.heading("one", text="Student Name", command=lambda: self.sort_by_name("one", False))
         self.tree.heading("two", text="College Name")
         self.tree.heading("three", text="Address")
         self.tree.heading("four", text="Email")
@@ -82,6 +82,13 @@ class DisplayFrame(tk.Frame):
 
         self.back_button = tk.Button(self, text="Back", command=lambda: master.show_frame(master.form_frame), width=20)
         self.back_button.pack()
+
+    def sort_by_name(self, col, reverse):
+        data = [(self.tree.set(item, col), item) for item in self.tree.get_children("")]
+        data.sort(reverse=reverse)
+        for index, (val, item) in enumerate(data):
+            self.tree.move(item, "", index)
+        self.tree.heading(col, command=lambda: self.sort_by_name(col, not reverse))
 
     def load_data(self):
         # Fetch the data from database and puts it into TreeView
