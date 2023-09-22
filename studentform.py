@@ -64,7 +64,7 @@ class DisplayFrame(tk.Frame):
         self.tree.column("one", width=75)
         self.tree.column("two", width=75)
         self.tree.heading("one", text="Student Name", command=lambda: self.sort_by_name("one", False))
-        self.tree.heading("two", text="College Name")
+        self.tree.heading("two", text="College Name", command=lambda: self.sort_by_name("two", False))
         self.tree.heading("three", text="Address")
         self.tree.heading("four", text="Email")
 
