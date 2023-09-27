@@ -1,9 +1,10 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+import ttkbootstrap as ttk
+from ttkbootstrap.dialogs import Messagebox
 import sqlite3
 
 
-class MyApp(tk.Tk):
+class MyApp(ttk.Window):
     def __init__(self):
         super().__init__()
         TABLE_NAME = "management_table"
@@ -47,21 +48,23 @@ class MyApp(tk.Tk):
             self.title("Display Results")
 
 
-class DisplayFrame(tk.Frame):
+class DisplayFrame(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
-        self.app_label = tk.Label(
-            self, text="Student Management System", fg="#06a099", width=40
+        style = ttk.Style(theme="vapor")
+        style.configure("CenterLabel.TLabel", anchor="center")
+
+        self.app_label = ttk.Label(
+            self, text="Student Management System", style="CenterLabel.TLabel", width=40
         )
         self.app_label.config(font=("Sylfaen", 30))
         self.app_label.grid(row=0, columnspan=2, padx=(10, 0), pady=(10, 0))
 
-        self.tree = ttk.Treeview(self)
+        self.tree = ttk.Treeview(self, bootstyle="info", show="headings")
         self.tree["columns"] = ("one", "two", "three", "four")
 
-        self.tree.column("one", width=100)
-        self.tree.column("two", width=100)
+        # Define headings
         self.tree.heading(
             "one", text="Student Name", command=lambda: self.sort_by_name("one", False)
         )
@@ -75,7 +78,7 @@ class DisplayFrame(tk.Frame):
 
         self.tree.grid(row=1, columnspan=2, padx=(10, 0), pady=(30, 0))
 
-        delete_button = tk.Button(
+        delete_button = ttk.Button(
             self,
             text="Remove Student",
             width=20,
@@ -83,7 +86,7 @@ class DisplayFrame(tk.Frame):
         )
         delete_button.grid(row=2, column=0, padx=(10, 0), pady=20)
 
-        self.back_button = tk.Button(
+        self.back_button = ttk.Button(
             self,
             text="Back",
             command=lambda: master.show_frame(master.form_frame),
@@ -139,7 +142,7 @@ class DisplayFrame(tk.Frame):
             + " WHERE "
             + STUDENT_NAME
             + " = '"
-            + student_name
+            + str(student_name)
             + "' AND "
             + STUDENT_COLLEGE
             + " = '"
@@ -155,13 +158,16 @@ class DisplayFrame(tk.Frame):
             + "';"
         )
         connection.commit()
-        messagebox.showinfo("Success", "Data Deleted Successfully.")
+        Messagebox.show_info("Success", "Data Deleted Successfully.")
         self.tree.delete(student_removed)
 
 
-class FormFrame(tk.Frame):
+class FormFrame(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
+
+        style = ttk.Style(theme="vapor")
+        style.configure("CenterLabel.TLabel", anchor="center")
 
         self.master = master
 
@@ -172,54 +178,54 @@ class FormFrame(tk.Frame):
         self.STUDENT_ADDRESS = "student_address"
         self.STUDENT_EMAIL = "student_email"
 
-        self.app_label = tk.Label(
-            self, text="Student Management System", fg="#06a099", width=40
+        self.app_label = ttk.Label(
+            self, text="Student Management System", style="CenterLabel.TLabel", width=40
         )
         self.app_label.config(font=("Sylfaen", 30))
         self.app_label.grid(row=0, columnspan=2, padx=(10, 0), pady=(30, 0))
 
-        self.name_label = tk.Label(
+        self.name_label = ttk.Label(
             self, text="Enter your name here:", width=40, anchor="w"
         )
         self.name_label.config(font=("Sylfaen", 12))
-        self.name_label.grid(row=1, column=0, padx=(10, 0), pady=(30, 0))
+        self.name_label.grid(row=1, column=0, padx=(10, 0), pady=(30, 20))
 
-        self.college_label = tk.Label(
+        self.college_label = ttk.Label(
             self, text="Enter your college here:", width=40, anchor="w"
         )
         self.college_label.config(font=("Sylfaen", 12))
-        self.college_label.grid(row=2, column=0, padx=(10, 0), pady=(30, 0))
+        self.college_label.grid(row=2, column=0, padx=(10, 0), pady=(30, 20))
 
-        self.email_label = tk.Label(
+        self.email_label = ttk.Label(
             self, text="Enter your email here:", width=40, anchor="w"
         )
         self.email_label.config(font=("Sylfaen", 12))
-        self.email_label.grid(row=3, column=0, padx=(10, 0), pady=(30, 0))
+        self.email_label.grid(row=3, column=0, padx=(10, 0), pady=(30, 20))
 
-        self.address_label = tk.Label(
+        self.address_label = ttk.Label(
             self, text="Enter your address here:", width=40, anchor="w"
         )
         self.address_label.config(font=("Sylfaen", 12))
-        self.address_label.grid(row=4, column=0, padx=(10, 0), pady=(30, 0))
+        self.address_label.grid(row=4, column=0, padx=(10, 0), pady=(30, 20))
 
-        self.name_entry = tk.Entry(self, width=30)
+        self.name_entry = ttk.Entry(self, width=30)
         self.name_entry.grid(row=1, column=1, padx=(0, 10), pady=20)
 
-        self.college_entry = tk.Entry(self, width=30)
+        self.college_entry = ttk.Entry(self, width=30)
         self.college_entry.grid(row=2, column=1, padx=(0, 10), pady=20)
 
-        self.email_entry = tk.Entry(self, width=30)
+        self.email_entry = ttk.Entry(self, width=30)
         self.email_entry.grid(row=3, column=1, padx=(0, 10), pady=20)
 
-        self.address_entry = tk.Entry(self, width=30)
+        self.address_entry = ttk.Entry(self, width=30)
         self.address_entry.grid(row=4, column=1, padx=(0, 10), pady=20)
 
-        self.input_button = tk.Button(
+        self.input_button = ttk.Button(
             self, text="Take Input", command=lambda: self.takeStudentInput()
         )
         self.input_button.grid(row=5, column=0, padx=(10, 0), pady=(30, 20))
 
-        self.display_button = tk.Button(
+        self.display_button = ttk.Button(
             self,
             text="Display Results",
             command=lambda: master.show_frame(master.display_frame),
@@ -229,13 +235,13 @@ class FormFrame(tk.Frame):
     def takeStudentInput(self):
         connection = sqlite3.connect("database.db")
         username = self.name_entry.get()
-        self.name_entry.delete(0, tk.END)
+        self.name_entry.delete(0, ttk.END)
         college_name = self.college_entry.get()
-        self.college_entry.delete(0, tk.END)
+        self.college_entry.delete(0, ttk.END)
         email = self.email_entry.get()
-        self.email_entry.delete(0, tk.END)
+        self.email_entry.delete(0, ttk.END)
         address = self.address_entry.get()
-        self.address_entry.delete(0, tk.END)
+        self.address_entry.delete(0, ttk.END)
 
         connection.execute(
             "INSERT INTO "
@@ -265,4 +271,4 @@ class FormFrame(tk.Frame):
         )
         # Load the data into the tree view after taking input
         self.master.display_frame.load_data()
-        messagebox.showinfo("Success", "Data Saved Successfully.")
+        Messagebox.show_info("Success", "Data Saved Successfully.")
