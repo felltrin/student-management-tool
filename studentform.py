@@ -6,7 +6,6 @@ import sqlite3
 class MyApp(tk.Tk):
     def __init__(self):
         super().__init__()
-
         TABLE_NAME = "management_table"
         STUDENT_ID = "student_id"
         STUDENT_NAME = "student_name"
@@ -56,21 +55,25 @@ class DisplayFrame(tk.Frame):
             self, text="Student Management System", fg="#06a099", width=40
         )
         self.app_label.config(font=("Sylfaen", 30))
-        self.app_label.pack()
+        self.app_label.grid(row=0, columnspan=2, padx=(10, 0), pady=(10, 0))
 
         self.tree = ttk.Treeview(self)
         self.tree["columns"] = ("one", "two", "three", "four")
 
-        self.tree.column("one", width=75)
-        self.tree.column("two", width=75)
-        self.tree.heading("one", text="Student Name", command=lambda: self.sort_by_name("one", False))
-        self.tree.heading("two", text="College Name", command=lambda: self.sort_by_name("two", False))
+        self.tree.column("one", width=100)
+        self.tree.column("two", width=100)
+        self.tree.heading(
+            "one", text="Student Name", command=lambda: self.sort_by_name("one", False)
+        )
+        self.tree.heading(
+            "two", text="College Name", command=lambda: self.sort_by_name("two", False)
+        )
         self.tree.heading("three", text="Address")
         self.tree.heading("four", text="Email")
 
         self.load_data()
 
-        self.tree.pack()
+        self.tree.grid(row=1, columnspan=2, padx=(10, 0), pady=(30, 0))
 
         delete_button = tk.Button(
             self,
@@ -78,10 +81,15 @@ class DisplayFrame(tk.Frame):
             width=20,
             command=lambda: self.removeSelection(),
         )
-        delete_button.pack()
+        delete_button.grid(row=2, column=0, padx=(10, 0), pady=20)
 
-        self.back_button = tk.Button(self, text="Back", command=lambda: master.show_frame(master.form_frame), width=20)
-        self.back_button.pack()
+        self.back_button = tk.Button(
+            self,
+            text="Back",
+            command=lambda: master.show_frame(master.form_frame),
+            width=20,
+        )
+        self.back_button.grid(row=2, column=1, padx=(10, 0), pady=20)
 
     def sort_by_name(self, col, reverse):
         data = [(self.tree.set(item, col), item) for item in self.tree.get_children("")]
@@ -94,9 +102,7 @@ class DisplayFrame(tk.Frame):
         # Fetch the data from database and puts it into TreeView
         TABLE_NAME = "management_table"
         connection = sqlite3.connect("database.db")
-        cursor = connection.execute(
-            "SELECT * FROM " + TABLE_NAME + ";"
-        )
+        cursor = connection.execute("SELECT * FROM " + TABLE_NAME + ";")
         i = 0
 
         for row in cursor:
@@ -107,9 +113,9 @@ class DisplayFrame(tk.Frame):
                 values=(row[1], row[2], row[3], row[4]),
             )
             i = i + 1
-        
+
         connection.close()
-    
+
     def removeSelection(self):
         # Removes the selected student from the database and the display
         TABLE_NAME = "management_table"
@@ -117,7 +123,7 @@ class DisplayFrame(tk.Frame):
         STUDENT_COLLEGE = "student_college"
         STUDENT_ADDRESS = "student_address"
         STUDENT_EMAIL = "student_email"
-        
+
         connection = sqlite3.connect("database.db")
         student_removed = self.tree.selection()[0]
         list_of_values = self.tree.item(student_removed)["values"]
@@ -213,9 +219,12 @@ class FormFrame(tk.Frame):
         )
         self.input_button.grid(row=5, column=0, padx=(10, 0), pady=(30, 20))
 
-        self.display_button = tk.Button(self, text="Display Results", command=lambda: master.show_frame(master.display_frame))
+        self.display_button = tk.Button(
+            self,
+            text="Display Results",
+            command=lambda: master.show_frame(master.display_frame),
+        )
         self.display_button.grid(row=5, column=1, padx=(10, 0), pady=(30, 20))
-
 
     def takeStudentInput(self):
         connection = sqlite3.connect("database.db")
@@ -251,7 +260,9 @@ class FormFrame(tk.Frame):
         )
         connection.commit()
         # Clear the Treeview and then reload the data
-        self.master.display_frame.tree.delete(*self.master.display_frame.tree.get_children())
+        self.master.display_frame.tree.delete(
+            *self.master.display_frame.tree.get_children()
+        )
         # Load the data into the tree view after taking input
         self.master.display_frame.load_data()
         messagebox.showinfo("Success", "Data Saved Successfully.")
