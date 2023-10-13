@@ -1,8 +1,8 @@
-import studentform
+from studentform import MyApp
 
 
 def main():
-    app = studentform.MyApp()
+    app = MyApp()
     app.mainloop()
 
 
