@@ -52,7 +52,7 @@ class DisplayFrame(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
-        style = ttk.Style(theme="vapor")
+        style = ttk.Style(theme="superhero")
         style.configure("CenterLabel.TLabel", anchor="center")
 
         self.app_label = ttk.Label(
@@ -166,7 +166,7 @@ class FormFrame(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
-        style = ttk.Style(theme="vapor")
+        style = ttk.Style(theme="superhero")
         style.configure("CenterLabel.TLabel", anchor="center")
 
         self.master = master
