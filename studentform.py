@@ -38,6 +38,8 @@ class MyApp(ttk.Window):
 
     def show_frame(self, frame):
         frame.grid(row=0, column=0, sticky="nsew")
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
         frame.tkraise()
         self.update_title(frame)  # Call the method to update the title
 
@@ -93,6 +95,13 @@ class DisplayFrame(ttk.Frame):
             width=20,
         )
         self.back_button.grid(row=2, column=1, padx=(10, 0), pady=20)
+
+        # assigning weights to the rows and columns for automatic resizing
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
 
     def sort_by_name(self, col, reverse):
         data = [(self.tree.set(item, col), item) for item in self.tree.get_children("")]
@@ -231,6 +240,16 @@ class FormFrame(ttk.Frame):
             command=lambda: master.show_frame(master.display_frame),
         )
         self.display_button.grid(row=5, column=1, padx=(10, 0), pady=(30, 20))
+
+        # assigning weights to grid rows and columns for automatic resizing
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=1)
+        self.grid_rowconfigure(4, weight=1)
+        self.grid_rowconfigure(5, weight=1)
 
     def takeStudentInput(self):
         connection = sqlite3.connect("database.db")
